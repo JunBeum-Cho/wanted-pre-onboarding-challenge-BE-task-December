@@ -16,3 +16,45 @@
 - (4) 메세지 큐를 쓰는 이유에 대하여 2가지 예시를 서술해주세요.
 - (5) 본인이 작성한 서버 코드가 있는 github repo 주소를 제출해주세요. (CRUD 기능을 모두 포함하여야 하며, 서버에 대한 설명을 README에 작성해주시면 더욱 좋습니다.) 
 - (6 - Optional) 해당 수업을 통해 꼭 배우고 싶은 주제 또는 지식이 있다면 자유롭게 서술해주세요.
+
+
+### (2) ‘Blocking’과 ‘Non-Blocking’의 차이점
+
+Blocking, Non-Blocking은 `호출된 함수`가 `호출한 함수`에게 제어권을 건네주는 유무의 차이라고 볼 수 있다.
+
+- Blocking : 자신의 작업을 진행하다가 다른 주체의 작업이 시작되면 다른 작업이 `끝날 때까지 기다렸다가` 작업을 시작하는 것
+- Non-Blocking : 다른 주체의 작업에 `관련 없이` 자신의 작업을 하는 것
+
+- **Blocking I/O 예시**
+    - Blocking I/O model
+    
+![image](https://user-images.githubusercontent.com/88137420/203744562-8770d9f2-6c26-438a-819c-67c7d0946a07.png)
+    
+    - 실제 I/O를 수행하는것은 커널레벨에서만 가능하기에 유저 프로세스(또는 쓰레드)는 커널에게 I/O를 요청해야한다. I/O에서 블로킹 형태의 작업은 유저 프로세스가 커널에게 I/O를 요청하는 함수를 호출하고, 커널이 작업을 완료되면 함수가 작업 결과를 반환한다.
+    - 함수를 호출하고 반환할 때까지 전체 시간동안 application은 차단(Blocking)됩니다.
+    - 여러 클라이언트가 접속하는 서버인 경우, I/O 작업을 호출한 작업은 중지되어도 다른 클라이언트가 실행하는 작업은 중지되면 안 되기 때문에 클라이언트 별로 스레드를 생성하게 되어 클라이언트의 수가 매우 많아지는 단점을 가지고 있다.
+    
+- **Non-blocking I/O 예시**
+    - Blocking I/O model
+    
+![image](https://user-images.githubusercontent.com/88137420/203744588-e1eb59c6-5024-49a4-bdf3-dd96b79cd9cf.png)
+    
+    - application은 함수의 결과가 준비 되었는지 확인하기 위해 지속적으로 커널을 폴링(명령의 수신 여부를 체크)합니다.
+    - 함수를 호출하는 처음 세 번에는 반환할 데이터가 없으므로 커널은 대신 EWOULDBLOCK 오류를 즉시 반환합니다. 함수를 네 번째로 호출하면 결과가 성공적으로 반환됩니다.
+    - 이것은 system call을 폴링하는 단점을 가지고 있습니다.
+
+<참고>
+
+[[10분 테코톡] 🐰 멍토의 Blocking vs Non-Blocking, Sync vs Async](https://youtu.be/oEIoqGd-Sns)
+
+[[10분 테코톡] 🎧 우의 Block vs Non-Block & Sync vs Async](https://www.youtube.com/watch?v=IdpkfygWIMk)
+
+[Blocking I/O와 Non-blocking I/O](https://www.youtube.com/watch?v=XNGfl3sfErc)
+
+[[Network] Blocking/Non-blocking & Synchronous/Asynchronous](https://github.com/gyoogle/tech-interview-for-developer/blob/master/Computer%20Science/Network/%5BNetwork%5D%20Blocking%2CNon-blocking%20%26%20Synchronous%2CAsynchronous.md)
+
+[I/O Models](http://www.masterraghu.com/subjects/np/introduction/unix_network_programming_v1.3/ch06lev1sec2.html)
+
+[Blocking / Non-Blocking](https://ozt88.tistory.com/20)
+
+[Blocking I/O and non-blocking I/O](https://medium.com/coderscorner/tale-of-client-server-and-socket-a6ef54a74763)
