@@ -89,62 +89,111 @@ Blocking, Non-Blocking은 `호출된 함수`가 `호출한 함수`에게 제�
 [Blocking I/O and non-blocking I/O](https://medium.com/coderscorner/tale-of-client-server-and-socket-a6ef54a74763)
 
 --- 
-### (3) 본인이 주로 사용하는 언어에서 비동기 프로그래밍을 사용하는 방법을 설명해주세요.
+### **(3) 본인이 주로 사용하는 언어에서 비동기 프로그래밍을 사용하는 방법을 설명해주세요.**
+
+`Future` 인터페이스는 자바 5버전부터 비동기적 연산의 처리 결과를 표현하기 위해 사용됩니다.
+
+`ExecutorService` 인터페이스를 통해 사용할 스레드의 개수를 설정하고, invokeAll 메서드를 통해 모든 Future 객체가 작업이 완료될 때까지 기다렸다가 최종 결과를 반환하기에 지연 완료(pending completion) 객체라고도 합니다. 
+
+따라서 Future는 결국 다른 주체의 작업 결과를 얻어오려면 잠시라도 블로킹 상태에 들어갈 수밖에 없기 때문에 사용하는 데 한계가 있다.
 
 ```java
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.*;
 
 public class FutureExample {
-    public static void main(String[] args) {
 
-        new Thread(() -> {
+    public static void main(String[] args) throws InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
+        
+        Callable<String> workFirst = () -> {
             try {
-                CompletableFuture
-                        .supplyAsync(FutureExample::work1)
-                        .thenAccept(FutureExample::work2)
-                        .get();
-            } catch (InterruptedException | ExecutionException e) {
+                log("작업 1 시작");
+                Thread.sleep(3000L);
+                log("작업 1 종료");
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }).start();
+            return "작업1 완료";
+        };
 
-        work3();
+        Callable<String> workSecond = () -> {
+            try {
+                log("작업 2 시작");
+                Thread.sleep(1000L);
+                log("작업 2 종료");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return "작업2 완료";
+        };
+
+        Callable<String> workThird = () -> {
+            try {
+                log("작업 3 시작");
+                Thread.sleep(10000L);
+                log("작업 3 종료");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return "작업3 완료";
+        };
+
+        Callable<String> workFourth = () -> {
+            try {
+                log("작업 4 시작");
+                Thread.sleep(5000L);
+                log("작업 4 종료");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return "작업4 완료";
+        };
+
+        List<Future<String>> futures = executorService.invokeAll(Arrays.asList(workFirst, workSecond, workThird, workFourth));
+        futures.stream()
+                .forEach(future -> {
+                    try {
+                        System.out.println(future.get());
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                });
+        executorService.shutdown();
     }
 
-    private static String work1() {
-        log("작업 1 시작");
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        log("작업 1 종료");
-        return "Alice";
-    }
-
-    private static void work2(String result) {
-        log("작업 1의 결과: " + result);
-        log("작업 2 시작");
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        log("작업 2 종료");
-    }
-
-    private static void work3() {
-        log("작업 3 시작");
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        log("작업 3 종료");
-    }
-
-    private static void log(String content) {
-        System.out.println(Thread.currentThread().getName() + "> " + content);
+    private static void log(String message) {
+        System.out.println("작업 상태 = " + message + " [사용하고 있는 스레드 = " + Thread.currentThread().getName() + "]");
     }
 }
 ```
+
+실행결과(매번 다름)
+
+```java
+작업 상태 = 작업 3 시작 [사용하고 있는 스레드 = pool-1-thread-3]
+작업 상태 = 작업 2 시작 [사용하고 있는 스레드 = pool-1-thread-2]
+작업 상태 = 작업 1 시작 [사용하고 있는 스레드 = pool-1-thread-1]
+작업 상태 = 작업 2 종료 [사용하고 있는 스레드 = pool-1-thread-2]
+작업 상태 = 작업 4 시작 [사용하고 있는 스레드 = pool-1-thread-2]
+작업 상태 = 작업 1 종료 [사용하고 있는 스레드 = pool-1-thread-1]
+작업 상태 = 작업 4 종료 [사용하고 있는 스레드 = pool-1-thread-2]
+작업 상태 = 작업 3 종료 [사용하고 있는 스레드 = pool-1-thread-3]
+작업1 완료
+작업2 완료
+작업3 완료
+작업4 완료
+```
+
+<참고>
+
+[더 자바, Java 8](https://www.inflearn.com/course/the-java-java8/dashboard)
+
+[Java - Future Interface 비동기적 연산 작업을 위한 인터페이스](https://wildeveloperetrain.tistory.com/141)
+
+[Java에서의 비동기 프로그래밍](https://velog.io/@pllap/Java%EC%97%90%EC%84%9C%EC%9D%98-%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D)
+
+---
