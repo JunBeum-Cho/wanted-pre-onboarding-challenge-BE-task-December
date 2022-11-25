@@ -2,7 +2,7 @@
 ## (1) 동기와 비동기 프로그래밍에 대한 차이점을 설명해주세요.
 
     동기 프로그래밍은 여러 작업들을 순차적으로 실행하도록 개발하는 것입니다.
-    비동기 프로그래밍은 여러 작업들을 독립적으로 실행하도록 개발하는 것입니다.
+    비동기 프로그래밍은 여러 작업들을 독립적으로 실행하도록 개발하는 것입니다. 비동기 프로그래밍을 하는 이유는 CPU의 유휴 시간을 줄여 작업 시간을 단축시키기 위함입니다.
 
 ##  (2) 블로킹과 논블로킹의 차이점을 설명해주세요.
 
@@ -10,28 +10,75 @@
     작업을 요청한 프로세스/스레드가 해당 요청이 완료될 때까지 대기 상태에 있는 것을 의미합니다.
     
     NonBlocking 개념
-    작업을 요청한 프로세스/스레드를 블락시키지 않고 요청에 대한 현재 상태를 즉시 리턴시킵니다. 그래서 스레드가 다른 작업을 수행할 수 있습니다. 
+    작업을 요청한 프로세스/스레드가 블락되지 않고 요청에 대한 현재 상태를 즉시 리턴시킵니다. 그래서 스레드가 다른 작업을 수행할 수 있습니다. 
     그래서 요청한 작업에 대해서 완료를 확인해야 할 필요성이 있습니다.
 
 ##  (3) 본인이 주로 사용하는 언어에서 비동기 프로그래밍을 사용하는 방법을 설명해주세요.
 
     async
-    python에서 함수 앞에 async를 등록 할 경우 해당 함수는 비동기 함수로 만들 수 있습니다.
-    asyncio는 이벤트 루프와 코루틴을 기반으로 동작하며 데이터를 요청하고 응답을 기다리는 I/O bound한 작업에서 효율적입니다.
-    코루틴 기반이므로 멀티 스레드와 비교하여 문맥교환에 따른 비용이 다소 적게 들어갑니다.
+    python에서 함수(def) 앞에 async를 붙여 줄 경우 해당 함수는 비동기 함수로 만들 수 있습니다. 그리고 이 함수를 코루틴이라고 합니다.
+    코루틴은 서브루틴의 확장된 개념입니다. 서브루틴의 경우 진입점과 반환점이 각각 1개로 2개인 반면 코루틴의 경우 진입지점과 반환점 그리고 중간 지점 등 다양한 지점이 있다는 것이 특징입니다.
+
+    코루틴 함수를 실행시키기 위해선 만든 함수를 asyncio.run() 안에서 호출시켜야 합니다. 비동기 함수 자체를 호출 할 경우 코루틴 객체가 반환됩니다. 즉 실행을 위한 별도의 조치가 필요합니다.
+    특정 함수 안에 비동기 함수를 사용해야 할 경우 바깥 함수를 비동기 함수로 선언한 후 그 안에 비동기 함수를 사용해야 합니다.
+
+    asyncio.create_task() 안에 비동기 함수를 넣어서 해당 함수를 이벤트 루프에 등록시킵니다. 코루틴은 이벤트루프에 등록되지 않으면 실행할 수 없습니다.
+    (이벤트루프는 비동기 프로그램에서 중요한 역할을 담당합니다 ---> 1)비동기함수 실행 2)콜백 실행 3)네트워크 간 I/O 작업 수행 4)서브 프로세스의 수행)
+
+    아래의 계층 구조를 통해 코루틴 함수를 실행하기 위해 필요한 요소를 확인할 수 있습니다. 코루틴은 Eventloop에 등록되지 않으면 실행되지 않기 때문에, await를 붙이거나 Future나 Task로 감싸야합니다.
+
+                 ┌──Coroutine
+                 │
+    Awaitable◄───┤
+                 │
+                 └──Future◄────────Task
+
+    파이썬은 스레드당 실행 중인 Eventoloop는 하나라는 제약조건을 가지고 있습니다. 즉 코루틴을 Eventloop에 다수 등록하더라도 single thread로 동작합니다. 이런 환경에서 번갈아가면서 실행함으로써 동시
+    에 실행하는 것처럼 동작합니다.
     
-    이벤트 루프
-    이벤트 루프는 작업들을 반복문 돌면서 하나씩 실행을 시킵니다. 이때, 실행한 작업이 데이터를 요청하고 응답을 기다린다면 
-    다른 작업에게 event loop에 대한 권한을 넘깁니다. 
-    권한을 받은 event loop는 다음 작업을 실행하고 응답을 받은 순서대로 대기하던 작업부터 다시 권한을 가져와 작업을 마무리합니다.
+    번갈아 가면서 실행하는 것은 await 키워드와 코루틴 단어를 통해 그 동작 과정을 이해할 수 있습니다. 일반함수가 진입지점과 반환지점이 하나여서 일반함수를 호출한 호출자에게 진입지점에서 실행권을 넘겨 받아 
+    실행하고 반환지점에서 해당 실행권을 넘겨줍니다. 
     
-        
-    비동기 함수로 만든 후 해당 함수를 실행시키기 위해선 asyncio.run() 안에 비동기 함수를 넣어주어야 합니다.
-    
-    print_numbers는 0.25초 간격으로 숫자를 출력하는 함수
+    그런데 코루틴은 언제든 실행권을 받을 수 있고 언제든 실행권을 반납할 수 있습니다. 그래서 여러개의 코루틴을 이벤트 루프에 등록 할 경우 아래와 같은 그림으로 실행되어 마치 동시에 실행되는 것처럼 동작합니다.
+
+                    Eventloop
+                       │
+    Coroutine 1        │
+                       │
+    ┌─────────────┐    │
+    │             │    │
+    │             │    │
+    │await        │    │      Coroutine 2
+    └─────────────┘    │    ┌─────────────┐
+           :           │    │             │
+          :            │    │             │
+           :           │    │await        │
+    ┌─────────────┐    │    └─────────────┘
+    │             │    │           :
+    │             │    │           :
+    │await        │    │           :
+    └─────────────┘    │           :
+           :           │    ┌─────────────┐
+           :           │    │             │
+           :           │    │             │
+           :           │    │return       │
+    ┌─────────────┐    │    └─────────────┘
+    │             │    │
+    │             │    │
+    │return       │    │
+    └─────────────┘    │
+                       │
+                       ▼
+
+    task1 = asyncio.create_task(print_numbers()) 이렇게 이벤트 루프에 등록 시 해당 함수는 Task 객체를 반환합니다.
+    Task객체는 Future객체를 상속 받고 있습니다. 따라서 Task 객체의 Future 객체를 통해 코루틴의 실행이 끝났을 때 결과를 받아볼 수 있는 상태를 마련합니다.
+
+    await task1 이렇게 작성 할 경우 Eventoloop에 실행권을 넘기면서 코루틴의 종료까지 기다릴 수 있습니다.
+
+    print_numbers는 0.25초 간격으로 숫자를 출력하는 함수입니다.
     print_alphabet은 0.25초 간격으로 알파벳을 출력하는 함수입니다.
 
-    이 때 각각의 함수에서 프린트 되는 숫자와 알파벳을 합쳐 두개의 함수가 서로 병렬적으로 실행되게 표현해보겠습니다.
+    이 때 각각의 함수에서 프린트 되는 숫자와 알파벳을 합쳐 두개의 함수가 서로 병렬적으로 실행되는 이유는 위에서 살펴 보았던
     
     동기적으로 코드를 작성했을 경우 1번부터 26까지의 숫자를 출력하고 나서 알파벳을 출력하겠지만, 
     비동기적으로 코드를 작성함으로써 두 함수가 병렬적으로 실행되는 것을 확인할 수 있습니다.
@@ -51,101 +98,28 @@
 
     async def main():    
         task1 = asyncio.create_task(print_numbers())
-        asyncio.create_task(print_alphabet())
+        task2 = asyncio.create_task(print_alphabet())
 
         await task1
+        await task2
     
     asyncio.run(main())
 
 
-    import logging
-    import socket
-    import select
-
-
-    logging.basicConfig(format='%(levelname)s - %(asctime)s: %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)
-
-    def create_blocking(host, ip):
-        logging.info('Blocking - creating socket')
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-        logging.info('Blocking - connecting')
-        s.connect((host, ip))
-
-        logging.info('Blocking - connected')
-        logging.info('Blocking - sending')
-
-        s.send(b'Hello\r\n')
-
-        logging.info('Blocking - waiting')
-        data = s.recv(1024)
-
-        logging.info(f'Blocking - data = {len(data)}')
-        logging.info('Blocking - closing')
-        s.close()
-
-
-    def create_nonblocking(host, port):
-        logging.info('Non Blocking - creating socket')
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-        logging.info('Non Blocking - connecting')
-        result = s.connect_ex((host, port)) #Blocking
-
-        if result != 0:
-            logging.info('Non Blocking - failed to connect')
-            return
-
-        logging.info('Non Blocking - connected')
-        s.setblocking(False)
-
-        input = [s]
-        output = [s]
-
-        while input:
-            logging.info('Non Blocking - waiting')
-            redable, writable, exceptional = select.select(input, output, input, 0.5)
-
-            for s in writable:
-                logging.info('Non Blocking - sending')
-                data = s.send(b'hello\r\n')
-                logging.info(f'Non Blocking - sent: {data}')
-                output.remove(s)
-
-            for s in redable:
-                logging.info('Non Blocking - reading')
-                data = s.recv(1024)
-                logging.info(f'Non Blocking - data: {len(data)}')
-                logging.info('Non Blocking - closing')
-                s.close()
-                input.remove(s)
-                break
-
-            for s in exceptional:
-                logging.info('Non Blocking - error')
-                input.remove(s)
-                output.remove(s)
-                break
-
-
-    # create_blocking('voidrealms.com', 80)
-    create_nonblocking('voidrealms.com', 80)
-
-
 ##  (4) 메세지 큐를 쓰는 이유에 대하여 2가지 예시를 서술해주세요.
-        메세지 큐를 쓰는 목적은 서버가 사용자에게 빠르고 안정적으로 정보를 전달하기 위해 사용한다. 아래는 메세지 큐를 사용함으로써 갖는 장점이다. 
-        
-        메세지 큐는 생성된 메세지의 저장, 전송에 대해 동기화 처리를 진행하지 않고 큐에 넣어둠으로써 나중에 처리할 수 있다.
-        소비자 서비스가 다운되더라도 어플리케이션이 중단되지 않고 메세지 큐에 소비되지 않은 메세지가 남아 있음으로써 소비자가 다시 시작될 때 메세지를 처리할 수 있다.
+    메세지 큐를 쓰는 목적은 서버가 사용자에게 빠르고 안정적으로 정보를 전달하기 위해 사용한다. 아래는 메세지 큐를 사용함으로써 갖는 장점이다. 
+    
+    메세지 큐는 생성된 메세지의 저장, 전송에 대해 동기화 처리를 진행하지 않고 큐에 넣어둠으로써 나중에 처리할 수 있다.
+    소비자 서비스가 다운되더라도 어플리케이션이 중단되지 않고 메세지 큐에 소비되지 않은 메세지가 남아 있음으로써 소비자가 다시 시작될 때 메세지를 처리할 수 있다.
 
-        예시)
-        앱에 요청을 했을 때 어느정도 지연이 허용되는 경우 메세지 큐를 사용한다. 여러가지 상황에서 사용자가 인증번호 발급을 위해 하나의 api를 호출할 때 
-        중간에 메세지 큐를 둠으로써 1)비밀번호를 잊어버렸을 때의 상황, 2)본인 확인을 위한 상황 등의 여러가지 상황에서 요청에 대응 할 수 있다.
+    예시)
+    앱에 요청을 했을 때 어느정도 지연이 허용되는 경우 메세지 큐를 사용한다. 여러가지 상황에서 사용자가 인증번호 발급을 위해 하나의 api를 호출할 때 
+    중간에 메세지 큐를 둠으로써 1)비밀번호를 잊어버렸을 때의 상황, 2)본인 확인을 위한 상황 등의 여러가지 상황에서 요청에 대응 할 수 있다.
 
  
-##   (5) 본인이 작성한 서버 코드가 있는 github repo 주소를 제출해주세요. (CRUD 기능을 모두 포함하여야 하며, 서버에 대한 설명을 README에 작성해주시면 더욱 좋습니다.) 
-        깃허브 링크
-        https://github.com/woodstock1993/DRF
+##  (5) 본인이 작성한 서버 코드가 있는 github repo 주소를 제출해주세요. (CRUD 기능을 모두 포함하여야 하며, 서버에 대한 설명을 README에 작성해주시면 더욱 좋습니다.) 
+    깃허브 링크
+    https://github.com/woodstock1993/DRF
  
-##   (6) 해당 수업을 통해 꼭 배우고 싶은 주제 또는 지식이 있다면 자유롭게 서술해주세요.
-         대용량 처리를 하는 방법에 대해서 배우고 싶습니다.
+##  (6) 해당 수업을 통해 꼭 배우고 싶은 주제 또는 지식이 있다면 자유롭게 서술해주세요.
+    대용량 처리를 하는 방법에 대해서 배우고 싶습니다.
