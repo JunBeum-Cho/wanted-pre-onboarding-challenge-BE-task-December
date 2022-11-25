@@ -17,6 +17,35 @@
 - (5) 본인이 작성한 서버 코드가 있는 github repo 주소를 제출해주세요. (CRUD 기능을 모두 포함하여야 하며, 서버에 대한 설명을 README에 작성해주시면 더욱 좋습니다.) 
 - (6 - Optional) 해당 수업을 통해 꼭 배우고 싶은 주제 또는 지식이 있다면 자유롭게 서술해주세요.
 
+---
+
+### (1) ‘Synchronous’와 ‘ASynchronous’의 차이
+
+1. 동기(Synchronous)는 작업은 한 번에 하나씩 수행되며 하나가 완료될 때만 다음 작업이 차단(Blocking) 해제됩니다. 즉, 다음 작업으로 이동하려면 작업이 완료될 때까지 기다려야 합니다.
+
+순서에 맞춰 진행되는 장점이 있지만,  여러 가지 요청을 동시에 처리할 수 없다.
+
+2. 비동기(Asynchronous)는 이전 작업이 완료되기 전에 다른 작업으로 이동할 수 있습니다. 이러한 방식으로 비동기 프로그래밍을 사용하면 여러 요청을 동시에 처리할 수 있으므로 훨씬 짧은 시간에 더 많은 작업을 완료할 수 있습니다.
+
+여러 개의 요청을 동시에 처리할 수 있는 장점이 있지만 동기 방식보다 속도가 떨어질 수도 있다.
+
+‘Blocking, Non-Blocking’과 ‘Sync, Async’은 굉장히 유사점을 가지고 있어서 이를 정리하자면, 다음 표와 같다.
+
+![image](https://user-images.githubusercontent.com/88137420/203763737-69f69741-0221-415d-b421-8201e27c0afb.png)
+
+<참고>
+
+[Asynchronous vs. Synchronous Programming: When to Use What (Using Low-Code as Example)](https://www.outsystems.com/blog/posts/asynchronous-vs-synchronous-programming/#asynchronous-vs-synchronous-difference)
+
+[Asynchronous vs synchronous execution. What is the difference?](https://stackoverflow.com/questions/748175/asynchronous-vs-synchronous-execution-what-is-the-difference)
+
+[sync와 async, blocking과 non-blocking 차이점은?](https://www.slipp.net/questions/367)
+
+[동기와 비동기의 개념과 차이](https://dev-coco.tistory.com/46)
+
+[Sync async-blocking-nonblocking-io](https://www.slideshare.net/unitimes/sync-asyncblockingnonblockingio)
+
+---
 
 ### (2) ‘Blocking’과 ‘Non-Blocking’의 차이점
 
@@ -58,3 +87,64 @@ Blocking, Non-Blocking은 `호출된 함수`가 `호출한 함수`에게 제�
 [Blocking / Non-Blocking](https://ozt88.tistory.com/20)
 
 [Blocking I/O and non-blocking I/O](https://medium.com/coderscorner/tale-of-client-server-and-socket-a6ef54a74763)
+
+--- 
+### (3) 본인이 주로 사용하는 언어에서 비동기 프로그래밍을 사용하는 방법을 설명해주세요.
+
+```java
+import java.util.concurrent.*;
+
+public class FutureExample {
+    public static void main(String[] args) {
+
+        new Thread(() -> {
+            try {
+                CompletableFuture
+                        .supplyAsync(FutureExample::work1)
+                        .thenAccept(FutureExample::work2)
+                        .get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        work3();
+    }
+
+    private static String work1() {
+        log("작업 1 시작");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        log("작업 1 종료");
+        return "Alice";
+    }
+
+    private static void work2(String result) {
+        log("작업 1의 결과: " + result);
+        log("작업 2 시작");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        log("작업 2 종료");
+    }
+
+    private static void work3() {
+        log("작업 3 시작");
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        log("작업 3 종료");
+    }
+
+    private static void log(String content) {
+        System.out.println(Thread.currentThread().getName() + "> " + content);
+    }
+}
+```
