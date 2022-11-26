@@ -234,3 +234,8 @@ public class FutureExample {
 [https://github.com/sosolog/Dingco](https://github.com/sosolog/Dingco)
 
 ---
+
+### (6) 해당 수업을 통해 꼭 배우고 싶은 주제 또는 지식이 있다면 자유롭게 서술해주세요.
+
+NEXT STEP의 인프라 공방 수업을 통해 인프라와 AWS에 관한 학습을 했지만 직접 설계하고 개발하지 못한 아쉬움이 있었습니다.
+이번 기회를 통해서 실서비스 수준의 서비스를 설계하고 개발하고 싶고 대용량 처리 및 실시간 처리를 가능하게 하는 Message Queue를 사용하고 싶습니다.
