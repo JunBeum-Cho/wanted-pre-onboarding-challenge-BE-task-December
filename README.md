@@ -197,3 +197,34 @@ public class FutureExample {
 [Java에서의 비동기 프로그래밍](https://velog.io/@pllap/Java%EC%97%90%EC%84%9C%EC%9D%98-%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D)
 
 ---
+
+### **(4) 메세지 큐를 쓰는 이유에 대하여 2가지 예시를 서술해주세요.**
+
+1. 메세지 큐는 상대방 서버의 문제 상황과 관계 없이 안전하게 데이터를 전달할 수 있다.
+
+서버 간 데이터를 주고 받거나 작업을 요청할 때, 서버가 갑자기 죽어 버리거나, 서버 점검 등 다운타임이 발생하는 동안에는 요청을 주고 받을 수 없다.
+이 때, 메시지 큐를 사용하면 간단하게 처리할 수 있다.
+
+![https://user-images.githubusercontent.com/88137420/204069953-26bc08a0-5fc2-4539-90e6-2478ec78efd3.png](https://user-images.githubusercontent.com/88137420/204069953-26bc08a0-5fc2-4539-90e6-2478ec78efd3.png)
+
+- Producer는 Consumer에 직접 요청을 하는것이 아닌, 메세지 큐(MQ)에 메세지를 전달한다.
+- Consumer가 수신할 수 없는 상황이라면, 메세지는 MQ에 머물렀다가 Consumer가 받을 수 있는 상황일 때 메세지를 가져간다.
+- 이는 오류에 대한 안정성을 제공하고 고가용성을 위해 여러 개의 메시지 사본을 저장하고 통신 장애 또는 오류 발생 시 메시지를 재전송하여 적어도 한 번은 메시지가 전달되도록 할 수 있다.
+1. 메세지 큐는 Producer와 Consumer를 분리(Decoupling)시키는 비동기 처리를 지원하며, 이를 통해 높은 성능을 제공합니다.
+- 메시지 큐는 비동기식 통신을 지원합니다. 즉, 메시지를 생산하고 소비하는 엔드포인트가 서로가 아니라 대기열과 상호 작용합니다.
+- 생산자는 요청이 처리되길 기다리지 않고 이를 대기열에 추가할 수 있습니다. 소비자는 메시지가 제공될 때만 처리합니다.
+- 시스템의 어떤 구성 요소도 다른 구성 요소를 기다리느라 지연되지 않으므로 데이터 흐름이 최적화됩니다.
+
+이러한 장점으로 메시지 큐는 대용량 데이터를 처리하기 위한 배치 작업이나, 채팅 서비스, 비동기 데이터를 처리할 때 활용된다.
+
+<참고>
+
+[Message Queue](https://aws.amazon.com/ko/message-queue/features)
+
+[메시지 큐에 대해 알아보자!](https://tecoble.techcourse.co.kr/post/2021-09-19-message-queue)
+
+[메세지 큐(Message Queue)란 무엇인가?](https://velog.io/@kimjaejung96/%EB%A9%94%EC%84%B8%EC%A7%80-%ED%81%90Message-Queue%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80)
+
+[메시지 큐(Message Queue)란?](https://sorjfkrh5078.tistory.com/291)
+
+---
