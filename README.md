@@ -210,7 +210,7 @@ public class FutureExample {
 - Producer는 Consumer에 직접 요청을 하는것이 아닌, 메세지 큐(MQ)에 메세지를 전달한다.
 - Consumer가 수신할 수 없는 상황이라면, 메세지는 MQ에 머물렀다가 Consumer가 받을 수 있는 상황일 때 메세지를 가져간다.
 - 이는 오류에 대한 안정성을 제공하고 고가용성을 위해 여러 개의 메시지 사본을 저장하고 통신 장애 또는 오류 발생 시 메시지를 재전송하여 적어도 한 번은 메시지가 전달되도록 할 수 있다.
-1. 메세지 큐는 Producer와 Consumer를 분리(Decoupling)시키는 비동기 처리를 지원하며, 이를 통해 높은 성능을 제공합니다.
+2. 메세지 큐는 Producer와 Consumer를 분리(Decoupling)시키는 비동기 처리를 지원하며, 이를 통해 높은 성능을 제공합니다.
 - 메시지 큐는 비동기식 통신을 지원합니다. 즉, 메시지를 생산하고 소비하는 엔드포인트가 서로가 아니라 대기열과 상호 작용합니다.
 - 생산자는 요청이 처리되길 기다리지 않고 이를 대기열에 추가할 수 있습니다. 소비자는 메시지가 제공될 때만 처리합니다.
 - 시스템의 어떤 구성 요소도 다른 구성 요소를 기다리느라 지연되지 않으므로 데이터 흐름이 최적화됩니다.
@@ -226,5 +226,11 @@ public class FutureExample {
 [메세지 큐(Message Queue)란 무엇인가?](https://velog.io/@kimjaejung96/%EB%A9%94%EC%84%B8%EC%A7%80-%ED%81%90Message-Queue%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80)
 
 [메시지 큐(Message Queue)란?](https://sorjfkrh5078.tistory.com/291)
+
+---
+
+### (5) 본인이 작성한 서버 코드가 있는 github repo 주소를 제출해주세요. (CRUD 기능을 모두 포함하여야 하며, 서버에 대한 설명을 README에 작성해주시면 더욱 좋습니다.)
+
+[https://github.com/sosolog/Dingco](https://github.com/sosolog/Dingco)
 
 ---
