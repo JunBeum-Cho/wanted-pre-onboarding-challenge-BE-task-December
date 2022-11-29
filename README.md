@@ -35,9 +35,11 @@ int select(int nfds, fd_set *restrict readfds, fd_set *restrict writefds, fd_set
 
 (5) 본인이 작성한 서버 코드가 있는 github repo 주소를 제출해주세요. (CRUD 기능을 모두 포함하여야 하며, 서버에 대한 설명을 README에 작성해주시면 더욱 좋습니다.) 
 
+http 1.1버전을 지원하는 http웹서버 개발 프로젝트
 https://github.com/aseungbo/42_webserv
 
-
+웹기반 온라인 실시간 핑퐁 게임 프로젝트(~ing)
+https://github.com/supertranscendence/back_end
 
 (6 - Optional) 해당 수업을 통해 꼭 배우고 싶은 주제 또는 지식이 있다면 자유롭게 서술해주세요.
 - 알고 있는 언어를 통해 간단하게 만들고자 하는 프로그램에 대한 구현은 할 수는 있다 하지만 이 프로그램을 만든 '나'라는 사람 뿐 아니라 나 이외의 사람도 이용을 할 수가 있어야 진정한 의미의 서비스가 된다고 생각을 하여서 배포를 위한 마지막 퍼즐인 aws에 대해서 완벽하지 않더라도 낯설다라는 의미는 없애는 기회가 되었으면 좋겠다.
