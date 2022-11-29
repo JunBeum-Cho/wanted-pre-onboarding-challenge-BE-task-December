@@ -16,6 +16,8 @@
 
 - (2) 블로킹과 논블로킹의 차이점을 설명해주세요.
 
+전통적인 
+
 제어권
 
 Function call corresponding to an I/O request will block the execution of the thread until the operation completes.
@@ -29,6 +31,9 @@ Node.js/Javascript에서는 비동기 프로그래밍 사용하는 방법은 다
 1. Async/Await
 
 - (4) 메세지 큐를 쓰는 이유에 대하여 2가지 예시를 서술해주세요.
+
+1. 시스템 성능: 메세지 큐는 비동기 통신을 가능하게 함으로서 전체 시스템 성능을 향상시킬 수 있다. 메세지 producer는 메세지가 가공되는 것을 기다릴 필요없이 큐에 쌓을 수 있고 consumer는 큐에 메세지가 쌓였을 때에만 작동하여 consumer-producter 상호간의 기다림을 방지하여 더 효유적으로 시스템에 더 원활히 데이터가 흐를 수 있도록 한다. 
+2. 가용성 향상: 각 (분산) 시스템간의 요소들의 coupling이 느슨해진다. 이로 인해 장애 전파 억제나 에러가 나도 메세지가 persist되고 (retry -> dlq) producer와 consumer들을 개별적으로 scale out할 수 있습니다.
 
 
 - (5) 본인이 작성한 서버 코드가 있는 github repo 주소를 제출해주세요. (CRUD 기능을 모두 포함하여야 하며, 서버에 대한 설명을 README에 작성해주시면 더욱 좋습니다.) 
