@@ -148,3 +148,74 @@ Hi!
 제어권을 바로 반납 받아 (`Hi!`를 기다리는 것이 아닌) `Bye!`를 실행하게 되기 때문입니다.
 <br>
 이렇게 제어권을 바로 반납 받아 다른 일을 할 수 있도록 하는것을 논블로킹이라고 합니다.
+
+## (3) 본인이 주로 사용하는 언어에서 비동기 프로그래밍을 사용하는 방법을 설명해주세요.
+
+Java 8 부터 지원하고 있는 `CompletableFuture` 인터페이스를 사용하고 있습니다.
+
+### ✨ 장점
+- 명시적 Thread Pool 선언이 필요 없습니다.
+- 함수형 프로그래밍 방식을 지원합니다.
+    - 간결한 코드, 높은 가독성을 제공합니다.
+    - 각 병렬 Task 들의 손쉬운 결합, 예외처리를 지원합니다.
+
+### 🪄 간단 사용방법
+1. 반환값 여부에 따른 함수 사용
+    - `static CompletableFuture<Void> runAsync(Runnable runnable)`
+      <br> : 반환 값이 필요 없는 경우
+    - `static <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier)`
+      <br> : 반환 값이 필요한 경우
+2. 비동기 작업 완료 콜백
+    - `CompletableFuture<Void> thenAccept(Consumer<? super T> action)`
+      <br> : 비동기 작업이 완료 됐을 때, 완료 결과를 소비(Consume) 처리함. 작업의 끗!
+    - `<U> CompletableFuture<U> thenApply(Function<? super T, ? extends U> fn)`
+      <br> : 비동기 작업이 완료 됐을 때, 결과 T를 새로운 값 U로 변환하는 함수를 실행
+    - `CompletableFuture<T> exceptionally(Function<Throwable, ? extends T> fn)`
+      <br> : 비동기 작업에서 예외가 발생했을 때, 예외를 Throwable 받고, 결과 T를 생성
+
+이를 조합해서 간단하게 사용해본다면? 아래와 사용할 수 있습니다. 🧐
+```java
+CompletableFuture.supplyAsync(() -> {
+    // 어마어마한 작업
+    return "작업 후 반환!";
+}).thenApply(s -> {
+    log.info("다음 작업으로 토스 가능! {}", s);
+    return s + " > 토스";
+}).thenAccept(s -> {
+    log.info("작업이 완료되었습니다. 끗! {}", s);
+}).exceptionally(e -> {
+    log.error("예외가 발생했습니다. {} ", e);
+    return null;
+});
+```
+
+### 🎓 사용 예시
+회원 가입을 할 때, 사옹자가 프로필 사진을 선택적으로 함께 등록(To. Aws S3)하는 기능을 추가할 때 사용했습니다.
+<br>
+코드를 예시로 설명 드리겠습니다.
+```java
+public void join(회원정보, Optional<이미지_파일>) {
+  회원정보_등록(회원정보);
+  
+  1_이미지가_존재한다면(이미지_파일 ->
+    CompletableFuture.supplyAsync(() ->
+      2_서버에_이미지_업로드(이미지_파일)
+    ).thenAccept(opt ->
+      opt.ifPresent(이미지_URL ->
+        // 이미지가 정상적으로 업로드가 완료된 경우
+        3_회원_프로필_이미지_업데이트(회원정보, 이미지_URL);
+      )
+    )
+  );
+}
+```
+1. 회원가입 때, 이미지 파일을 `Optional`로 받습니다.
+2. 이미지가 존재한다면 (이미지 DTO 클래스가 있다면 변환하고) 비동기로 이미지 업로드를 진행합니다.
+    - 먼저 서버에 업로드를 하고,
+    - 성공적으로 업로드가 되었다면, 등록된 회원 정보에 프로필 정보를 업데이트 합니다.
+
+이렇게 사용하는 이유는 만약에 동기적으로 진행하여 AWS 외부에 이미지를 업로드 한다면,
+<br>
+AWS 서버에 지연이 되는 등 문제가 발생했을 때, 사용자는 이미지 업로드가 될때까지 회원가입을 기다려야 합니다.
+<br>
+이를 비동기 함수를 사용함으로써 사용자가 외부적 요인에 의해 기다리는 일이 없도록 서비스를 원할하게 사용할 수 있도록 하였습니다.
