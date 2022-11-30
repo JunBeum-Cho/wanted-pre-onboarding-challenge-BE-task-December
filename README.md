@@ -40,7 +40,8 @@ CompletableFuture - runAsync,supplyAsync
 runAsync와 supplyAsync는 기본적으로 자바7에 추가된 ForkJoinPool의 commonPool()을 사용해 작업을 실행할 쓰레드를 쓰레드 풀로부터 얻어 실행시킨다. 만약 원하는 쓰레드 풀을 사용하려면, ExecutorService를 파라미터로 넘겨주면 된다.
 
 runAsync 예제
-  void runAsync() throws ExecutionException, InterruptedException {
+  
+      void runAsync() throws ExecutionException, InterruptedException {
       CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
           System.out.println("Thread: " + Thread.currentThread().getName());
       });
@@ -48,9 +49,10 @@ runAsync 예제
       future.get();
       System.out.println("Thread: " + Thread.currentThread().getName());
   }
+
 SupplyAsync 예제
 
-  void supplyAsync() throws ExecutionException, InterruptedException {
+     void supplyAsync() throws ExecutionException, InterruptedException {
 
       CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
           return "Thread: " + Thread.currentThread().getName();
