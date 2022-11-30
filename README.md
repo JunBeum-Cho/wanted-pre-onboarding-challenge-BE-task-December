@@ -48,7 +48,7 @@ runAsync 예제
 
       future.get();
       System.out.println("Thread: " + Thread.currentThread().getName());
-  }
+      }
 
 SupplyAsync 예제
 
@@ -60,7 +60,7 @@ SupplyAsync 예제
 
       System.out.println(future.get());
       System.out.println("Thread: " + Thread.currentThread().getName());
-  }
+      }
 
 - (4) 메세지 큐를 쓰는 이유에 대하여 2가지 예시를 서술해주세요.
   메시지는 메시지 큐에 남아 있어 소비자 서비스가 다시 시작될 때마다 추가 설정이나 작업을 수행하지 않고도 메시지 처리를 시작할 수 있다
