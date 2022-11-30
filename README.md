@@ -27,6 +27,6 @@ python의 경우 동기화 언어이기때문에  import asyncio 로 비동기�
 또한 비동기 방식이지만 빠른 전송속도를 요구하지 않는경우인, 회원가입시 이메일인증과 같은 경우에 사용하여 이메일이 기다리는 동안 유저들이 다른작업을 할 수 있게 로딩페이지에 묶어두지 않음.
  
 - (5) 본인이 작성한 서버 코드가 있는 github repo 주소를 제출해주세요. (CRUD 기능을 모두 포함하여야 하며, 서버에 대한 설명을 README에 작성해주시면 더욱 좋습니다.) 
-https://github.com/JHyeok-Choi/testback
+https://github.com/JHyeok-Choi/backend
 
 - (6 - Optional) 해당 수업을 통해 꼭 배우고 싶은 주제 또는 지식이 있다면 자유롭게 서술해주세요.
