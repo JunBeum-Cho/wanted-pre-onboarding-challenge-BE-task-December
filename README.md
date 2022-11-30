@@ -60,9 +60,7 @@
 2. 블로그 포스팅, 이메일 전송과 같이 작업시간이 오래 걸리는 일에 사용한다.
 ```
 - (5) 본인이 작성한 서버 코드가 있는 github repo 주소를 제출해주세요. (CRUD 기능을 모두 포함하여야 하며, 서버에 대한 설명을 README에 작성해주시면 더욱 좋습니다.) 
-```
-https://github.com/Zero-Human/simple-game-service
-```
+  - https://github.com/Zero-Human/simple-game-service
 - (6 - Optional) 해당 수업을 통해 꼭 배우고 싶은 주제 또는 지식이 있다면 자유롭게 서술해주세요.
 ```
 AWS의 기초적인 내용과 구조를 구성할 때 어쩧게 진행하면 좋을지 배우고 싶습니다.
