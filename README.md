@@ -25,6 +25,7 @@ ExecutorService는 Single Thread를 생성합니다.
  submit()으로 Callable을 전달하면, 인자로 전달된 Callable을 수행
 future.get()는 Future 객체에 어떤 값이 설정될 때까지 기다립니다. 
 submit()에 전달된 Callable이 어떤 값을 리턴하면 그 값을 Future에 설정합니다
+
 ExecutorService executor
         = Executors.newSingleThreadExecutor();
 
@@ -34,7 +35,8 @@ Future<Integer> future = executor.submit(() -> {
     Thread.sleep(3000);
     return sum;
 });
-CompletableFuture 
+
+CompletableFuture - runAsync,supplyAsync
 runAsync와 supplyAsync는 기본적으로 자바7에 추가된 ForkJoinPool의 commonPool()을 사용해 작업을 실행할 쓰레드를 쓰레드 풀로부터 얻어 실행시킨다. 만약 원하는 쓰레드 풀을 사용하려면, ExecutorService를 파라미터로 넘겨주면 된다.
 
 runAsync 예제
@@ -60,7 +62,7 @@ void supplyAsync() throws ExecutionException, InterruptedException {
 
 - (4) 메세지 큐를 쓰는 이유에 대하여 2가지 예시를 서술해주세요.
   메시지는 메시지 큐에 남아 있어 소비자 서비스가 다시 시작될 때마다 추가 설정이나 작업을 수행하지 않고도 메시지 처리를 시작할 수 있다
-기존 동기화 방식에 비해 메시지 큐는 생산된 메시지의 저장, 전송에 대해 동기화 처리를 진행하지 않고, 큐에 넣어 두기 때문에 나중에 처리할 수 있다.
+  기존 동기화 방식에 비해 메시지 큐는 생산된 메시지의 저장, 전송에 대해 동기화 처리를 진행하지 않고, 큐에 넣어 두기 때문에 나중에 처리할 수 있다.
 
 - (5) 본인이 작성한 서버 코드가 있는 github repo 주소를 제출해주세요. (CRUD 기능을 모두 포함하여야 하며, 서버에 대한 설명을 README에 작성해주시면 더욱 좋습니다.) 
   https://github.com/jeeyoun-kang/Movie-Website-SpringBoot
