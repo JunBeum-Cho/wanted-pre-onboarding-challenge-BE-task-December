@@ -59,6 +59,7 @@ https://www.koyeb.com/blog/introduction-to-synchronous-and-asynchronous-processi
 
 **논블로킹**
 - 논블로킹은 A함수가 B함수를 호출해도 제어권은 그대로 자신이 가지고 있는다.
+
 ![](https://velog.velcdn.com/images/celeste/post/9e4e611e-76de-4946-8e74-7c0ee052fb97/image.png)
 1. A함수가 B함수를 호출하면, B 함수는 실행되지만, 제어권은 A 함수가 그대로 가지고 있는다.
 2. A함수는 계속 제어권을 가지고 있기 때문에 B함수를 호출한 이후에도 자신의 코드를 계속 실행한다.
