@@ -53,7 +53,7 @@
   //true
   //Hello
   ```
-  왜 log결과 Exit가 맨 끝에 있을까?    
+  > 왜 log결과 Exit가 맨 끝에 있을까?    
   System.out.println(f.get())에서 get()메서드는 결과값을 받을 때까지 대기하는 Blocking 메서드이기 때문이다.     
   그럼, 굳이 ThreadPool만들어서 이렇게 구현할까? 이것 나름으로 Observer패턴 등을 활용할 때 유용하게 사용된다고 한다.
   - FutureTask
