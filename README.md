@@ -18,7 +18,8 @@ spring scheduled annotation + Async anotation -> 싱글 스레드(scheduled anno
 ```
 - (2) 블로킹과 논블로킹의 차이점을 설명해주세요.
 ```
-
+블로킹 : API의 Request body와 Response body
+논블로킹 : spring netty, 서버를 열어두면 상시 데이터를 수신받음 (socket)
 ```
 - (3) 본인이 주로 사용하는 언어에서 비동기 프로그래밍을 사용하는 방법을 설명해주세요.
 ```java
