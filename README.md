@@ -11,8 +11,36 @@
 ## 1-2) 사전 과제
 
 - (1) 동기와 비동기 프로그래밍에 대한 차이점을 설명해주세요.
+```
+spring scheduled annotation -> 싱글 스레드로 작동, 스케줄 큐가 쌓이면 스케줄이 지연됨
+spring scheduled annotation + Async anotation -> 싱글 스레드(scheduled annotation) + 추가 스레드(Async annotation)로
+지연의 원인의 되는 스케줄을 추가 스레드에서 실행 할 수 있음.
+```
 - (2) 블로킹과 논블로킹의 차이점을 설명해주세요.
+```
+
+```
 - (3) 본인이 주로 사용하는 언어에서 비동기 프로그래밍을 사용하는 방법을 설명해주세요.
+```java
+@Schleduled(cron = "0 0 1 * * *") //약 3시간 걸리는 배치
+@Async
+public void 정말_느린_코드() { someService.realSlow(); }
+```
+
 - (4) 메세지 큐를 쓰는 이유에 대하여 2가지 예시를 서술해주세요.
+```
+서버 혼자 여러 서비스(kibana, dw, socket 등)에 보내기 버겁다
+
+특정 고객사에게만 이벤트를 발송(알림톡)을 보내기 위해
+```
+
 - (5) 본인이 작성한 서버 코드가 있는 github repo 주소를 제출해주세요. (CRUD 기능을 모두 포함하여야 하며, 서버에 대한 설명을 README에 작성해주시면 더욱 좋습니다.) 
+```
+https://github.com/GHGHGHKO/goose-auth-api-server
+```
+
 - (6 - Optional) 해당 수업을 통해 꼭 배우고 싶은 주제 또는 지식이 있다면 자유롭게 서술해주세요.
+```
+prod 환경의 aws 기반의 아키텍처에 대해
+```
+
